@@ -407,6 +407,7 @@ describe('getOpenClawUpstreamModelState', () => {
     expect(result.ok).toBe(true)
     expect(result.data?.modelStatusLike).toEqual({
       allowed: ['minimax-portal/MiniMax-M2.7', 'openai-codex/gpt-5.4'],
+      allowedSource: 'catalog',
       defaultModel: 'minimax-portal/MiniMax-M2.7',
       model: 'minimax-portal/MiniMax-M2.7',
     })

@@ -72,7 +72,7 @@ const KNOWN_PROVIDER_METADATA: ProviderMetadata[] = [
     logo: '⚡',
     region: 'global',
     signupUrl: 'https://platform.minimax.io/',
-    description: 'MiniMax M3, MiniMax M2.7',
+    description: 'MiniMax M3.1 Flash, MiniMax M3',
     primaryEnvKey: 'MINIMAX_API_KEY',
     methods: [
       { authChoice: 'minimax-api-key', envKey: 'MINIMAX_API_KEY' },

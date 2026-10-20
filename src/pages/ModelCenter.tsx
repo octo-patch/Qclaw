@@ -16,6 +16,7 @@ import {
   getUpstreamModelStatusLike,
 } from '../shared/upstream-model-state'
 import { listAllModelCatalogItems } from '../lib/model-catalog-pagination'
+import { selectCurrentMiniMaxCatalog } from '../lib/minimax-model-catalog'
 import {
   getProviderMetadata,
   getKnownProviderCatalog,
@@ -1499,14 +1500,17 @@ export async function resolveDefaultModelForProviderCandidates(
     }
 
     const upstreamStatusModelKeys = collectStatusModelKeys(upstreamStatusData)
-    const matchedUpstreamStatusModel = upstreamStatusModelKeys.find((key) =>
+    const selectableStatusModelKeys = upstreamStatusData.allowedSource === 'catalog'
+      ? selectCurrentMiniMaxCatalog(upstreamStatusModelKeys.map((key) => ({ key }))).map((item) => item.key)
+      : upstreamStatusModelKeys
+    const matchedUpstreamStatusModel = selectableStatusModelKeys.find((key) =>
       modelMatchesProviderCandidates(key, expandedCandidates)
     )
     if (matchedUpstreamStatusModel) return matchedUpstreamStatusModel
   }
 
   const upstreamCatalog = upstreamState ? getUpstreamCatalogItemsLike(upstreamState) : []
-  const matchedUpstreamCatalogModel = upstreamCatalog.find((item) =>
+  const matchedUpstreamCatalogModel = selectCurrentMiniMaxCatalog(upstreamCatalog).find((item) =>
     item.available !== false && modelMatchesProviderCandidates(String(item?.key || ''), expandedCandidates)
   )
   if (matchedUpstreamCatalogModel?.key) return matchedUpstreamCatalogModel.key
@@ -1534,7 +1538,7 @@ export async function resolveDefaultModelForProviderCandidates(
       }, pageSize),
       timeoutMs
     )
-    const matchedCatalogModel = (providerCatalog || []).find((item) =>
+    const matchedCatalogModel = selectCurrentMiniMaxCatalog(providerCatalog || []).find((item) =>
       modelMatchesProviderCandidates(String(item?.key || ''), expandedCandidates)
     )
     if (matchedCatalogModel?.key) return matchedCatalogModel.key

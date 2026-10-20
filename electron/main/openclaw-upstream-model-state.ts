@@ -473,6 +473,8 @@ function buildModelStatusLikeFromRpcSignals(params: {
   const statusLike: Record<string, unknown> = {}
   if (allowed.length > 0) {
     statusLike.allowed = allowed
+    // A projected catalog is not an explicit saved model allowlist.
+    statusLike.allowedSource = 'catalog'
   }
   if (defaultModel) {
     statusLike.defaultModel = defaultModel

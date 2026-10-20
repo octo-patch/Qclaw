@@ -83,7 +83,7 @@ describe('openclaw-provider-registry', () => {
     const minimax = getProviderMetadata('minimax')
     expect(minimax?.region).toBe('global')
     expect(minimax?.signupUrl).toBe('https://platform.minimax.io/')
-    expect(minimax?.description).toBe('MiniMax M3, MiniMax M2.7')
+    expect(minimax?.description).toBe('MiniMax M3.1 Flash, MiniMax M3')
     expect(minimax?.methods).toEqual([
       { authChoice: 'minimax-api-key', envKey: 'MINIMAX_API_KEY' },
       { authChoice: 'minimax-api-key-cn', envKey: 'MINIMAX_API_KEY' },

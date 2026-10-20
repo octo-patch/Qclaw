@@ -16,6 +16,7 @@ import {
 } from '../lib/model-catalog-display'
 import { extractConfiguredProviderIds } from './configured-provider-extraction'
 import type { ModelVerificationRecord } from './model-verification-state'
+import { selectCurrentMiniMaxCatalog } from '../lib/minimax-model-catalog'
 
 export interface ModelsPageCatalogItem {
   key: string
@@ -462,9 +463,17 @@ export function buildEffectiveModelCatalog<T extends ModelsPageCatalogItem>(
     verificationRecords?: ModelVerificationRecord[]
   } = {}
 ): T[] {
+  const preservedKeys = [
+    options.preferredModelKey || '',
+    ...Array.from(new Set(catalog.map((item) => item.provider))).flatMap((provider) =>
+      collectRuntimeProviderModelKeys(provider, options.statusData?.allowedSource === 'catalog'
+        ? { ...options.statusData, allowed: [] }
+        : options.statusData || null)
+    ),
+  ]
   return dedupeModelsPageCatalogByRuntimeKey(
     reconcileCatalogAvailabilityWithStatus(
-      catalog,
+      selectCurrentMiniMaxCatalog(catalog, preservedKeys),
       options.statusData,
       options.configuredProviderIds || [],
       options.verificationRecords || []
