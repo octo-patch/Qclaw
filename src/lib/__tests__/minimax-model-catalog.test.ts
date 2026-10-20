@@ -66,6 +66,20 @@ describe('current MiniMax catalog', () => {
     }
   })
 
+  it.each(['switch-success', 'switch-failed', 'runtime-auto'] as const)('preserves explicit selection history but not automatic discovery: %s', (source) => {
+    const legacy = item('minimax/MiniMax-M2.7')
+    const result = buildEffectiveModelCatalog([legacy], {
+      verificationRecords: [{
+        modelKey: 'minimax-portal/MiniMax-M2.7',
+        runtimeKey: 'minimax/minimax-m2.7',
+        verificationState: 'verified-unavailable',
+        source,
+        updatedAt: '2026-10-20T00:00:00.000Z',
+      }],
+    })
+    expect(result.map((entry) => entry.key)).toEqual(source === 'runtime-auto' ? [] : [legacy.key])
+  })
+
   it('keeps configured legacy models in the real page catalog without advertising unsaved legacy models', () => {
     const config = { models: { providers: { minimax: { models: [{ id: 'MiniMax-M2.5' }] } } } }
     const before = structuredClone(config)

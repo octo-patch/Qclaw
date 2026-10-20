@@ -465,6 +465,9 @@ export function buildEffectiveModelCatalog<T extends ModelsPageCatalogItem>(
 ): T[] {
   const preservedKeys = [
     options.preferredModelKey || '',
+    ...(options.verificationRecords || [])
+      .filter((record) => record.source === 'switch-success' || record.source === 'switch-failed')
+      .map((record) => record.modelKey),
     ...Array.from(new Set(catalog.map((item) => item.provider))).flatMap((provider) =>
       collectRuntimeProviderModelKeys(provider, options.statusData?.allowedSource === 'catalog'
         ? { ...options.statusData, allowed: [] }
